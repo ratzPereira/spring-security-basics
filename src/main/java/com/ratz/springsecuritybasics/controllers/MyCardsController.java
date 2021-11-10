@@ -5,6 +5,7 @@ import com.ratz.springsecuritybasics.Entity.Customer;
 import com.ratz.springsecuritybasics.services.CardsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,6 +23,16 @@ public class MyCardsController {
 
         List<Cards> cards = cardsService.getCardsByCustomerId(customer.getId());
         return cards.isEmpty() ? cards : null;
+    }
+
+    @PostMapping("/myCards")
+    public List<Cards> getCardDetails(@RequestBody Customer customer) {
+        List<Cards> cards = cardsService.getCardsByCustomerId(customer.getId());
+        if (cards != null ) {
+            return cards;
+        }else {
+            return null;
+        }
     }
 
 }
