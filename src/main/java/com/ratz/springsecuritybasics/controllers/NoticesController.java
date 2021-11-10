@@ -18,6 +18,7 @@ public class NoticesController {
     public List<Notice> getNotices() {
         List<Notice> notices = service.findAllActiveNotices();
         if (notices != null ) {
+            System.out.println(notices);
             return notices;
         }else {
             return null;

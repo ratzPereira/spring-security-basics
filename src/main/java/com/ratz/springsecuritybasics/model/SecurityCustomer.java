@@ -27,7 +27,7 @@ public class SecurityCustomer implements UserDetails {
 
     @Override
     public String getPassword() {
-        return customer.getPassword();
+        return customer.getPwd();
     }
 
     @Override

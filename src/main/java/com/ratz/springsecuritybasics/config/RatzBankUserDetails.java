@@ -19,10 +19,10 @@ public class RatzBankUserDetails implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        List<Customer> customers = repository.findByEmail(s);
-        if (customers.isEmpty()){
-            throw new UsernameNotFoundException("Username not found");
+        List<Customer> customer = repository.findByEmail(s);
+        if (customer.size() == 0) {
+            throw new UsernameNotFoundException("User details not found for the user : " + s);
         }
-        return new SecurityCustomer(customers.get(0));
+        return new SecurityCustomer(customer.get(0));
     }
 }

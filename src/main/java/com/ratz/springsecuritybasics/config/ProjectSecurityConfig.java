@@ -2,22 +2,15 @@ package com.ratz.springsecuritybasics.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.sql.DataSource;
 import java.util.Collections;
 
 @Configuration
@@ -29,25 +22,23 @@ public class ProjectSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().configurationSource(new CorsConfigurationSource() {
                     @Override
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-
-                        CorsConfiguration configuration = new CorsConfiguration();
-                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
-                        configuration.setAllowedMethods(Collections.singletonList("*"));
-                        configuration.setAllowCredentials(true);
-                        configuration.setAllowedHeaders(Collections.singletonList("*"));
-                        configuration.setMaxAge(3600L);
-                        return configuration;
+                        CorsConfiguration config = new CorsConfiguration();
+                        config.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+                        config.setAllowedMethods(Collections.singletonList("*"));
+                        config.setAllowCredentials(true);
+                        config.setAllowedHeaders(Collections.singletonList("*"));
+                        config.setMaxAge(3600L);
+                        return config;
                     }
-                }).and()
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/myAccount").authenticated()
-                .antMatchers("/myBalance").authenticated()
-                .antMatchers("/myLoans").authenticated()
+                }).and().csrf().disable().authorizeRequests()
+                .and().authorizeRequests()
+                .antMatchers("/myAccount").hasRole("USER")
+                .antMatchers("/myBalance").hasAnyRole("USER","ADMIN")
+                .antMatchers("/myLoans").hasRole("ROOT")
                 .antMatchers("/myCards").authenticated()
+                .antMatchers("/user").authenticated()
                 .antMatchers("/notices").permitAll()
-                .antMatchers("/contact").permitAll()
-                .and().formLogin().and().httpBasic();
+                .antMatchers("/contact").permitAll().and().httpBasic();
 
     }
 
@@ -71,7 +62,5 @@ public class ProjectSecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
-
-
 
 }

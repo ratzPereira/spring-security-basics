@@ -18,11 +18,11 @@ public class LoginController {
     @RequestMapping("/user")
     public Customer getUserDetailsAfterLogin(Principal user) {
         List<Customer> customers = repository.findByEmail(user.getName());
+        System.out.println(customers.get(0).getAuthorities().toString());
         if (customers.size() > 0) {
             return customers.get(0);
         }else {
             return null;
         }
-
     }
 }

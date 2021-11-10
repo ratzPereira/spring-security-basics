@@ -3,6 +3,7 @@ package com.ratz.springsecuritybasics.Entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Customer {
@@ -21,6 +22,10 @@ public class Customer {
     @Column(name = "create_dt")
     private String createDt;
 
+    @JsonIgnore
+    @OneToMany(mappedBy="customer",fetch=FetchType.EAGER)
+    private Set<Authority> authorities;
+
     public int getId() {
         return id;
     }
@@ -29,36 +34,20 @@ public class Customer {
         this.id = id;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return pwd;
-    }
-
-    public void setPassword(String password) {
-        this.pwd = password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getMobileNumber() {
@@ -77,11 +66,41 @@ public class Customer {
         this.pwd = pwd;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public String getCreateDt() {
         return createDt;
     }
 
     public void setCreateDt(String createDt) {
         this.createDt = createDt;
+    }
+
+    public Set<Authority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", mobileNumber='" + mobileNumber + '\'' +
+                ", pwd='" + pwd + '\'' +
+                ", role='" + role + '\'' +
+                ", createDt='" + createDt + '\'' +
+
+                '}';
     }
 }
